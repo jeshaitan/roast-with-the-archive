@@ -1,4 +1,5 @@
 # roast-with-the-archive
-GPT-2 generated collaborative poetry. Model finetuned on on https://roast-archive.github.io/
+GPT-2 generated collaborative poetry. Model finetuned here: https://roast-archive.github.io/
 
-Currently working on the associated interactive Flask web app.
+## TODO:
+Interactive Flask web app.
