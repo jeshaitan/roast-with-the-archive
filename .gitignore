@@ -7,6 +7,10 @@
 # GPT-2 Model Checkpoints
 checkpoint/*
 
+# Emacs
+*~
+\#*\#
+
 # Others
 tfvenv/*
 __pycache__/
