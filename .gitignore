@@ -1,0 +1,12 @@
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# GPT-2 Model Checkpoints
+checkpoint/*
+
+# Others
+tfvenv/*
+__pycache__/
