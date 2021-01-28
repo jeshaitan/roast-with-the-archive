@@ -1,6 +1,16 @@
 <html>
   <head>
     <title>Roast with the Archive</title>
+    <script>
+      function disable() {
+	  if(document.getElementById("lines").value != "") {
+	      document.getElementById("sbutton").value = "Roasting…";
+	      document.querySelector("#sbutton").addEventListener("click", function(event) {
+		  event.preventDefault();
+	      }, false);
+	  }
+      }
+    </script>
   </head>
   <body>
     <h2>NEW! You can now roast <i>with</i> the Archives!</h2>
@@ -11,7 +21,7 @@
         {% endfor %}
       </p>
     {% endif %}
-    <form action="" method="post" novalidate>
+    <form id="roastform" onsubmit="disable()" action="" method="post" novalidate>
       {{ form.hidden_tag() }}
       <p>
         {{ form.lines(rows='4', cols='90', placeholder='Write a line or so…') }}
@@ -19,7 +29,10 @@
           <span style="color: red;"><i>{{ error }}</i></span>
 	{% endfor %}
       </p>
-      <p>{{ form.submit() }} {{ form.clear() }}</p>
+      <p>
+	{{ form.sbutton() }}
+	{{ form.cbutton() }}
+      </p>
     </form>
   </body>
 </html>

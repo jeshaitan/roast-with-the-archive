@@ -15,5 +15,4 @@ def genresp(tfsess, temp, pref, top_p, length, checkpoint):
                            truncate="<|endoftext|>",
                            run_name=checkpoint,
                            return_as_list=True)[0]
-    print("noooo!!!!")
     return response

@@ -12,32 +12,35 @@ graph = tf.get_default_graph()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    lform = LineForm()
-
+    lform = LineForm()    
+    
     # "Start Over." button pressed or empty session
-    if lform.clear.data or 'acc_roast' not in session:
+    if lform.cbutton.data or 'acc_roast' not in session:
         session['nothingsofar'] = True
         session['acc_roast'] = ''
-            
+        
     # "Go!" button pressed
-    if lform.submit.data and lform.validate_on_submit():
+    if lform.sbutton.data and lform.validate_on_submit():
         if session['nothingsofar']:
             session['nothingsofar'] = False
-            session['acc_roast'] = lform.lines.data + '\n'
+            session['acc_roast'] = '<|title|>' + lform.lines.data + '\n'
         else:
-            session['acc_roast'] += lform.lines.data + '\n'
+            session['acc_roast'] = '<|title|>' + session['acc_roast'] + '\n' + lform.lines.data + '\n'
 
         # Generate response from entire roast so far.
         prompt = session['acc_roast']
-        resplength = max(1, len(lform.lines.data) + randint(-5, 15)) 
+        resplength = max(1, len(lform.lines.data) + randint(-1, 10)) 
         with graph.as_default():
             response = genresp(tfsess,
-                               temp=0.71,
-                               pref='<|title|>' + prompt,
+                               temp=0.70,
+                               pref=prompt,
                                top_p=0.95,
                                length=resplength,
                                checkpoint=CHECKPOINT)
-            session['acc_roast'] += response + '\n'
-        
+            # Remove title token
+            session['acc_roast'] = response[9:]
+
+    lform.sbutton.disabled = False
+    lform.cbutton.disabled = False
     lform.lines.data = ''
     return render_template('index.html', current_roast=session['acc_roast'], form=lform)
