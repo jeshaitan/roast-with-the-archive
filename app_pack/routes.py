@@ -29,7 +29,7 @@ def index():
 
         # Generate response from entire roast so far.
         prompt = session['acc_roast']
-        resplength = max(1, len(lform.lines.data) + randint(-1, 10)) 
+        resplength = max(1, len(lform.lines.data) + randint(0, 5)) 
         with graph.as_default():
             response = genresp(tfsess,
                                temp=0.70,
