@@ -1,5 +1,5 @@
-import tensorflow as tf
-import gpt_2_simple as gpt2
+#import tensorflow as tf
+#import gpt_2_simple as gpt2
 
 def startsess(checkpoint):
     tfsess = gpt2.start_tf_sess()
