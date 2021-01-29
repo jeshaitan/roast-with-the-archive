@@ -25,16 +25,19 @@ def index():
         
     # "Go!" button pressed
     if lform.sbutton.data and lform.validate_on_submit():
+        lines = "\n".join(lform.lines.data.splitlines())
+        print(lines)
         if session['nothingsofar']:
             session['nothingsofar'] = False
-            session['acc_roast'] = lform.lines.data + '\n'
+            session['acc_roast'] = lines + '\n'
         else:
-            session['acc_roast'] = session['acc_roast'] + '\n' + lform.lines.data + '\n'
+            session['acc_roast'] = session['acc_roast'] + '\n' + lines + '\n'
 
-        # Generate response from entire roast so far.
-        prompt = session['acc_roast']
-        resplength = min(len(lform.lines.data.split()) * 3, 1023)
-        
+        # Generate response from (max) 400 recent tokens.
+        roast_tokens = session['acc_roast'].split(" ")
+        contextlen = min(len(roast_tokens), 500)
+        prompt = " ".join(roast_tokens[(-1 * contextlen):])
+        resplength = min(len(lines.split(" ")) * 2, 1023)
         '''
         with graph.as_default():
             session['acc_roast'] = genresp(tfsess,
@@ -42,7 +45,7 @@ def index():
                                length=resplength,
                                checkpoint=CHECKPOINT)
         '''
-        req = requests.post('https://gpt2-api-jeivmljjkq-nn.a.run.app',
+        req = requests.post('https://gpt-jeivmljjkq-uc.a.run.app',
                     json={'length': resplength,
                           'temperature': 0.7,
                           'top_p': 0.95,

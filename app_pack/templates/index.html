@@ -2,6 +2,7 @@
   <head>
     <title>Roast with the Archive</title>
     <script>
+      // Disable buttons while GPT-2 POST request active.
       function disable() {
 	  if(document.getElementById("lines").value != "") {
 	      document.getElementById("sbutton").value = "Roasting…";
@@ -11,20 +12,28 @@
 	  }
       }
     </script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css') }}">
   </head>
   <body>
     <h2>NEW! You can now roast <i>with</i> the Archives!</h2>
     {% if current_roast %}
-      <p id="roast_para">
-        {% for line in current_roast.split('\n') %}
-          {{ line }}<br />
-        {% endfor %}
-      </p>
+    <div class="roast_container">
+      <h4 class="roast_title">
+	{{ current_roast.split('\n')[0] }}
+      </h4>
+      {% for line in current_roast.split('\n')[1:] %}
+        {% if line == "" or line == " " or line == "\n" %}
+          <p class="roast_line"><br /></p>
+	{% else %}
+          <p class="roast_line">{{ line }}</p>
+	{% endif %}
+      {% endfor %}
+    </div>
     {% endif %}
     <form id="roastform" onsubmit="disable()" action="" method="post" novalidate>
       {{ form.hidden_tag() }}
       <p>
-        {{ form.lines(rows='4', cols='90', placeholder='Write a line or so…') }}
+        {{ form.lines(rows='4', cols='90', placeholder='Write a line or so… (The very first line will be the title.)') }}
 	{% for error in form.lines.errors %}
           <span style="color: red;"><i>{{ error }}</i></span>
 	{% endfor %}

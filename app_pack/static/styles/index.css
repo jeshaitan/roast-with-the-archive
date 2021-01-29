@@ -1,0 +1,24 @@
+body {
+    #background-color: #390E42;
+    #color: #FFFFFF;
+    font-family: "Times New Roman";
+}
+
+.roast_title {
+	font-style: italic;
+	font-weight: normal;
+	margin-bottom: 20px;
+}
+
+.roast_container {
+	width: 575px;
+	padding-left: 20px;
+	text-indent: -20px;
+	line-height: 20px;
+
+	margin-bottom: 30px;
+}
+
+.roast_line {
+	margin-top: -16px;
+}
