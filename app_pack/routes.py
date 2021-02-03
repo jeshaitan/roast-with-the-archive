@@ -26,18 +26,23 @@ def index():
     # "Go!" button pressed
     if lform.sbutton.data and lform.validate_on_submit():
         lines = "\n".join(lform.lines.data.splitlines())
-        print(lines)
+        
         if session['nothingsofar']:
             session['nothingsofar'] = False
             session['acc_roast'] = lines + '\n'
         else:
             session['acc_roast'] = session['acc_roast'] + '\n' + lines + '\n'
 
-        # Generate response from (max) 400 recent tokens.
-        roast_tokens = session['acc_roast'].split(" ")
-        contextlen = min(len(roast_tokens), 500)
-        prompt = " ".join(roast_tokens[(-1 * contextlen):])
-        resplength = min(len(lines.split(" ")) * 2, 1023)
+        # Generate response from (max) 500 recent tokens.
+        #roast_tokens = session['acc_roast'].split(" ")
+        #contextlen = min(len(roast_tokens), 500)
+        #prompt = " ".join(roast_tokens[-contextlen:])
+        #resplength = min(len(lines.split(" ")), 1023)
+        prompt = session['acc_roast'][-450:]
+        maxtokensleft = 1023 - len(prompt.split(" "))
+        resplength = min(len(lines.split(" ")), maxtokensleft)
+        print("?" + prompt)
+        print("??" + str(resplength))
         '''
         with graph.as_default():
             session['acc_roast'] = genresp(tfsess,
@@ -45,13 +50,19 @@ def index():
                                length=resplength,
                                checkpoint=CHECKPOINT)
         '''
+        # Request from model image
         req = requests.post('https://gpt-jeivmljjkq-uc.a.run.app',
                     json={'length': resplength,
                           'temperature': 0.7,
                           'top_p': 0.95,
                           'prefix': prompt,
+                          #'include_prefix': False,
                           'truncate': '<|endoftext|>'})
-        session['acc_roast'] = req.json()['text']
+
+        print("!" + req.json()['text'])
+        print("!!" + req.json()['text'][len(prompt):])
+        # Add new text subtracting the prompt
+        session['acc_roast'] += req.json()['text'][len(prompt):]
 
     lform.sbutton.disabled = False
     lform.cbutton.disabled = False
